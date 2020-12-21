@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cultured"
+    tools:context=".HomeActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/header"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="60dp">
+            <TextView
+                android:id="@+id/saldoTV"
+                android:text="@string/saldo"
+                android:layout_marginTop="30dp"
+                style="@style/reportContentText" />
+
+            <TextView
+                android:id="@+id/balanceTV"
+                style="@style/viewParent.headerText"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:layout_below="@id/saldoTV"
+                android:text="$15,990.00"
+                android:textSize="50sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="70dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/cardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/headerLayout"
+            android:layout_marginTop="3dp">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/mutasiCard"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/med_aqua"
+                android:clickable="true"
+                style="@style/reportsCardStyle">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        style="@style/viewParent.headerText"
+                        android:textSize="27sp"
+                        android:text="@string/mutasi"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/transferCard"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/med_aqua"
+                android:clickable="true"
+                style="@style/reportsCardStyle">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        style="@style/viewParent.headerText"
+                        android:textSize="27sp"
+                        android:text="@string/tf"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

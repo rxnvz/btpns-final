@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <ImageView
+            android:id="@+id/moneyIV"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/money"
+            android:layout_centerVertical="true"/>
+        <LinearLayout
+            android:id="@+id/leftLL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/moneyIV">
+            <TextView
+                android:id="@+id/namaTV"
+                style="@style/viewParent.headerText"
+                android:textSize="21sp"
+                android:text=" Srd. Kuma"/>
+            <TextView
+                android:id="@+id/tglMutasiTV"
+                style="@style/reportContentText"
+                android:text="22/03/2019"
+                android:textColor="@color/black_shadow"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/rightLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="right"
+            android:layout_toRightOf="@id/leftLL">
+            <TextView
+                android:id="@+id/uangTV"
+                style="@style/viewParent.headerText"
+                android:textSize="21sp"
+                android:text="Rp500.000,-"
+                android:textColor="@color/black_shadow"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/jenisTV"
+                style="@style/reportContentText"
+                android:text="Transfer"
+                android:textColor="@color/black_shadow"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">My Bank</string>
+    <string name="login">Masuk</string>
+    <string name="welcome">Selamat Datang</string>
+    <string name="regis">Daftar</string>
+    <string name="regis_form">Nasabah Baru</string>
+    <string name="uname">Username</string>
+    <string name="pass">Password</string>
+    <string name="forgot">Lupa Password?</string>
+    <string name="naleng">Nama Lengkap</string>
+    <string name="alamat">Alamat</string>
+    <string name="ttl">Tanggal Lahir</string>
+    <string name="mail">E-mail</string>
+    <string name="telp">No. Telepon</string>
+    <string name="pin_reg">PIN (Digunakan saat transfer)</string>
+    <string name="pin">PIN</string>
+    <string name="saldo_awal">Saldo awal</string>
+    <string name="mutasi">Mutasi</string>
+    <string name="tf">Transfer</string>
+    <string name="saldo">Saldo Saat Ini</string>
+    <string name="nik">No. KTP</string>
+    <string name="setuju">Dengan mendaftar, anda menyetujui semua syarat dan ketentuan yang berlaku di bank BTPN Syariah</string>
+    <string name="mut">Mutasi Rekening</string>,
+    <string name="transfer">Transfer Uang</string>
+    <string name="bank_code">Kode Bank</string>
+    <string name="rek_tujuan">Rekening Tujuan</string>
+    <string name="jmh_uang">Jumlah Uang</string>
+    <string name="pesan">Pesan</string>
+    <string name="set_date">Pilih tanggal</string>
+    <string name="rp">Rp</string>
+</resources>

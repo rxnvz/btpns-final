@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MutationActivity">
+
+   <androidx.core.widget.NestedScrollView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent">
+       <RelativeLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="20dp">
+
+           <TextView
+               android:id="@+id/titleMutasi"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center_horizontal"
+               android:layout_margin="20dp"
+               android:textSize="23sp"
+               android:text="@string/mut"
+               android:textColor="@color/black"/>
+
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/setDateBtn"
+               android:layout_below="@id/titleMutasi"
+               style="?attr/materialButtonOutlinedStyle"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               app:backgroundTint="@color/med_aqua"
+               android:textColor="@color/black"
+               android:text="@string/set_date"
+               android:paddingTop="10dp"
+               android:paddingBottom="10dp"
+               android:textAllCaps="false"
+               android:layout_marginLeft="20dp"
+               android:layout_marginRight="20dp"
+               android:textSize="15sp"/>
+
+           <TextView
+               android:id="@+id/dateTV"
+               android:layout_below="@id/setDateBtn"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center_horizontal"
+               android:layout_marginTop="15dp"
+               android:layout_marginLeft="20dp"
+               android:layout_marginRight="20dp"
+               android:layout_marginBottom="20dp"
+               android:textSize="18sp"/>
+
+           <androidx.recyclerview.widget.RecyclerView
+               android:layout_below="@id/dateTV"
+               android:id="@+id/mutasiRV"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               tools:listitem="@layout/mutasi_item"/>
+
+       </RelativeLayout>
+   </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
