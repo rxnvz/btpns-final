@@ -1,6 +1,7 @@
 package org.example.restapi.controller;
 
 import com.google.gson.Gson;
+import org.example.db.models.Mutasi;
 import org.example.db.models.Nasabah;
 import org.example.db.models.Transaksi;
 import org.example.restapi.rabbitmq.APIReceive;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLOutput;
 
 @RestController
-@RequestMapping("/api")
 public class NasabahAPI {
 
     APISend send = new APISend();
@@ -23,10 +23,20 @@ public class NasabahAPI {
     public ResponseEntity<?> newNasabah (@RequestBody Nasabah nb) {
         try {
             send.newNasabah(new Gson().toJson(nb));
+            recv.receiveFromDB();
+            JSONObject object = new JSONObject();
+            object.put("response",200);
+            object.put("status","Success");
+            object.put("message","Berhasil menambah data ke database");
+            return new ResponseEntity<>(object, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("ERROR REGISTER: " + e);
+            JSONObject object = new JSONObject();
+            object.put("response",400);
+            object.put("status","Error");
+            object.put("message","Error tambah data");
+            return new ResponseEntity<>(object, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Registrasi berhasil! Silahkan login", HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -37,7 +47,11 @@ public class NasabahAPI {
             return new ResponseEntity<>(recv.loginAPI(), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("ERROR LOGIN: " + e);
-            return new ResponseEntity<>("Data tidak ditemukan. Cek kembali username dan password atau silahkan mendaftar.", HttpStatus.NOT_FOUND);
+            JSONObject object = new JSONObject();
+            object.put("response",400);
+            object.put("status","Error");
+            object.put("message","Error Login, Please Check Username or Password!!!");
+            return new ResponseEntity<>(object, HttpStatus.OK);
         }
     }
 
@@ -45,10 +59,15 @@ public class NasabahAPI {
     public ResponseEntity<?> doLogout(@RequestBody Nasabah nb) {
         try {
             send.doLogout(new Gson().toJson(nb));
-            return new ResponseEntity<>("Berhasil keluar! Silahkan masuk kembali", HttpStatus.OK);
+            Thread.sleep(2300);
+            return new ResponseEntity<>(recv.logoutAPI(), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("ERROR LOGOUT: " + e);
-            return new ResponseEntity<>("Anda sudah keluar.", HttpStatus.FORBIDDEN);
+            JSONObject object = new JSONObject();
+            object.put("response",400);
+            object.put("status","Error");
+            object.put("message","Error Logout");
+            return new ResponseEntity<>(object, HttpStatus.OK);
         }
     }
 
@@ -63,9 +82,43 @@ public class NasabahAPI {
             System.out.println("isi response: " + response);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("ERROR GET DATA: " + e);
-            return new ResponseEntity<>("Data tidak ditemukan.", HttpStatus.NOT_FOUND);
+            System.out.println("ERROR GET SALDO: " + e);
+            JSONObject object = new JSONObject();
+            object.put("response",400);
+            object.put("status","Error");
+            object.put("message","Error Cek Saldo");
+            return new ResponseEntity<>(object, HttpStatus.OK);
         }
-
     }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<?> doTransfer (@RequestBody Transaksi tr) {
+        try {
+            send.doTransfer(new Gson().toJson(tr));
+            JSONObject object = new JSONObject();
+            object.put("response",200);
+            object.put("status","Success");
+            object.put("message","Berhasil melakukan transfer");
+            return new ResponseEntity<>(object, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("ERROR TRANSFER: " + e);
+            JSONObject object = new JSONObject();
+            object.put("response",400);
+            object.put("status","Error");
+            object.put("message","Error Transfer");
+            return new ResponseEntity<>(object, HttpStatus.OK);
+        }
+    }
+
+//    @PostMapping("/mutasi")
+//    public ResponseEntity<?> getMutasi(@RequestBody Mutasi mt) {
+//        try {
+////            send.getMutasi(new Gson().toJson(mt));
+////            recv.getMutasi();
+//            return new ResponseEntity<>("Bisa", HttpStatus.OK);
+//        } catch (Exception e) {
+//            System.out.println("ERROR GET MUTASI: " + e);
+//            return new ResponseEntity<>("Data tidak ditemukan.", HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

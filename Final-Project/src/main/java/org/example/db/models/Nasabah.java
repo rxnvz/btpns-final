@@ -3,7 +3,9 @@ package org.example.db.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "nasabah")
@@ -14,7 +16,7 @@ public class Nasabah {
     private int id_nasabah;
 
     @Column(name = "nama_lengkap")
-    private String nama;
+    private String nama_lengkap;
 
     @Column(name = "email")
     private String email;
@@ -29,10 +31,10 @@ public class Nasabah {
     private String gender;
 
     @Column(name = "no_ktp")
-    private String ktp;
+    private String no_ktp;
 
     @Column(name = "birth_date")
-    private String tgl_lahir;
+    private String birth_date;
 
     @Column(name = "no_telp")
     private String no_telp;
@@ -49,14 +51,14 @@ public class Nasabah {
 //    @OneToMany(mappedBy = "nasabah", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 //    private List<Transaksi> transactions = new ArrayList<>();
 
-    public Nasabah(String nama, String email, String username, String password, String gender, String ktp, String tgl_lahir, String no_telp, String alamat) {
-        this.nama = nama;
+    public Nasabah(String nama_lengkap, String email, String username, String password, String gender, String no_ktp, String birth_date, String no_telp, String alamat) {
+        this.nama_lengkap = nama_lengkap;
         this.email = email;
         this.username = username;
         this.password = password;
         this.gender = gender;
-        this.ktp = ktp;
-        this.tgl_lahir = tgl_lahir;
+        this.no_ktp = no_ktp;
+        this.birth_date = birth_date;
         this.no_telp = no_telp;
         this.alamat = alamat;
         this.saldo = 5000000;
@@ -73,11 +75,11 @@ public class Nasabah {
     }
 
     // -------------------- SETTER & GETTER NAME --------------------
-    public String getNama() {
-        return nama;
+    public String getNama_lengkap() {
+        return nama_lengkap;
     }
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setNama_lengkap(String nama_lengkap) {
+        this.nama_lengkap = nama_lengkap;
     }
 
     // -------------------- SETTER & GETTER EMAIL --------------------
@@ -113,19 +115,19 @@ public class Nasabah {
     }
 
     // -------------------- SETTER & GETTER KTP --------------------
-    public String getKtp() {
-        return ktp;
+    public String getNo_ktp() {
+        return no_ktp;
     }
-    public void setKtp(String ktp) {
-        this.ktp = ktp;
+    public void setNo_ktp(String no_ktp) {
+        this.no_ktp = no_ktp;
     }
 
     // -------------------- SETTER & GETTER BIRTH --------------------
-    public String getTgl_lahir() {
-        return tgl_lahir;
+    public String getBirth_date() {
+        return birth_date;
     }
-    public void setTgl_lahir(String tgl_lahir) {
-        this.tgl_lahir = tgl_lahir;
+    public void setBirth_date(String birth_date) {
+        this.birth_date = birth_date;
     }
 
     // -------------------- SETTER & GETTER PHONE --------------------
@@ -153,7 +155,6 @@ public class Nasabah {
     }
 
     // -------------------- SETTER & GETTER LOGIN STATUS --------------------
-
     public String getLoginStatus() {
         return loginStatus;
     }

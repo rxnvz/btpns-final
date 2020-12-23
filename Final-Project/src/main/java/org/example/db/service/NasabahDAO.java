@@ -1,6 +1,7 @@
 package org.example.db.service;
 
 import com.google.gson.Gson;
+import org.example.db.models.Mutasi;
 import org.example.db.models.Nasabah;
 import org.example.db.models.Transaksi;
 
@@ -28,24 +29,11 @@ public class NasabahDAO {
 
         Transaksi tr = new Transaksi();
         tr.setTipe_transaksi("Uang Masuk");
+        tr.setKode_transaksi("200");
         tr.setTrans_money(nb.getSaldo());
         tr.setId_nasabah(nb.getId_nasabah());
         entityManager.persist(tr);
     }
-
-//    public Nasabah findUser(String nbString) {
-//        try {
-//            Nasabah nb = new Gson().fromJson(nbString, Nasabah.class);
-//            query = entityManager.createQuery("SELECT n FROM Nasabah n WHERE n.username='" + nb.getUsername() + "'", Nasabah.class).getSingleResult();
-//        } catch (Exception e) {
-//            System.out.println("ERROR find user " + e);
-//        }
-//        return query;
-//    }
-//
-//    public List<Nasabah> getData() {
-//        return entityManager.createQuery("SELECT saldo FROM Nasabah", Nasabah.class).getResultList();
-//    }
 
     public int login(String nbStr) {
         Nasabah nb = new Gson().fromJson(nbStr, Nasabah.class);
@@ -93,6 +81,34 @@ public class NasabahDAO {
         }
     }
 
+    public int userCheckId(String trStr) {
+        Transaksi tr = new Gson().fromJson(trStr, Transaksi.class);
+        String select = "SELECT id_nasabah FROM Nasabah WHERE id_nasabah=:id_nasabah AND loginStatus=:loginStatus";
+        Query q = entityManager.createQuery(select);
+        q.setParameter("id_nasabah", tr.getId_nasabah());
+        q.setParameter("loginStatus", "true");
+
+        if (q.getResultList().size() != 0) {
+            return (int) q.getResultList().get(0);
+        } else {
+            return q.getResultList().size();
+        }
+    }
+
+    public int userCheckIdMutasi(String mutasi) {
+        Mutasi mt = new  Gson().fromJson(mutasi, Mutasi.class);
+        String select = "SELECT id_nasabah FROM Nasabah WHERE id_nasabah=:id_nasabah AND loginStatus=:loginStatus";
+        Query q = entityManager.createQuery(select);
+        q.setParameter("id_nasabah", mt.getId_nasabah());
+        q.setParameter("loginStatus", "true");
+
+        if (q.getResultList().size() != 0) {
+            return (int) q.getResultList().get(0);
+        } else {
+            return q.getResultList().size();
+        }
+    }
+
     public int getSaldo(Nasabah nb) {
         String query = "SELECT saldo FROM Nasabah WHERE id_nasabah=:id_nasabah";
         Query q = entityManager.createQuery(query);
@@ -103,4 +119,41 @@ public class NasabahDAO {
             return q.getResultList().size();
         }
     }
+
+    public void doTransfer(String trString) {
+        Transaksi tr = new Gson().fromJson(trString, Transaksi.class);
+        tr.setTipe_transaksi("Transfer Uang");
+        entityManager.persist(tr);
+
+        Nasabah nb = entityManager.find(Nasabah.class, tr.getId_nasabah());
+        nb.setSaldo(nb.getSaldo()-tr.getTrans_money());
+        entityManager.merge(nb);
+
+        Nasabah nbTax = entityManager.find(Nasabah.class, tr.getId_nasabah());
+        nbTax.setSaldo(nbTax.getSaldo() - 6500);
+
+        Transaksi tax = new Transaksi();
+        tax.setTipe_transaksi("Biaya Admin");
+        tax.setKode_transaksi("200");
+        tax.setTrans_money(6500);
+        tax.setId_nasabah(tr.getId_nasabah());
+        entityManager.persist(tax);
+    }
+
+//    public List<Nasabah> getMutasi(String mutasi) {
+//        Mutasi mt = new Gson().fromJson(mutasi, Mutasi.class);
+//        String select = "SELECT " +
+//                "n.id_nasabah, n.nama_lengkap, n.email, n.username, n.password, " +
+//                "n.gender, n.no_ktp, n.birth_date, n.no_telp, n.alamat, n.saldo, n.loginStatus, " +
+//                "t.kode_transaksi, t.rekening_tujuan, t.transaction_date, t.tipe_transaksi, t.trans_money " +
+//                "FROM nasabah AS n " +
+//                "INNER JOIN transaksi AS t " +
+//                "ON n.id_nasabah=:id_nasabah AND t.id_nasabah=:id_nasabah " +
+//                "WHERE (t.transaction_date BETWEEN :begin_date AND :end_date) ";
+//        Query q = entityManager.createQuery(select);
+//        q.setParameter("id_nasabah", mt.getId_nasabah());
+//        q.setParameter("begin_date", mt.getStart_mutasi());
+//        q.setParameter("end_date", mt.getEnd_mutasi());
+//        return q.getResultList();
+//    }
 }

@@ -1,8 +1,10 @@
-package com.example.mybank;
+package com.example.mybank.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.mybank.R;
 
 public class HomeActivity extends AppCompatActivity {
 

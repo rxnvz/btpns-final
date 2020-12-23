@@ -12,6 +12,10 @@ public class DBMain {
             receive.doLogin();
             receive.doLogout();
             receive.getSaldo();
+            receive.newRekening();
+            receive.checkSaldoDummy();
+            receive.doTransfer();
+//            receive.getMutasi();
         }catch (Exception e){
             System.out.println("Error DatabaseMain = " + e);
         }

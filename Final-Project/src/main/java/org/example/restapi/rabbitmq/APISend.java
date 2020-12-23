@@ -54,4 +54,26 @@ public class APISend {
         }
     }
 
+    public void doTransfer(String tfStr) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("doTransfer", false, false, false, null);
+            channel.basicPublish("", "doTransfer", null, tfStr.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] SEND TRANSFER: '" + tfStr + "'");
+        }
+    }
+
+//    public void getMutasi(String mutasi) throws IOException, TimeoutException {
+//        ConnectionFactory factory = new ConnectionFactory();
+//        factory.setHost("localhost");
+//        try (Connection con = factory.newConnection();
+//             Channel channel = con.createChannel()) {
+//            channel.queueDeclare("getMutasi", false, false, false, null);
+//            channel.basicPublish("", "getMutasi", null, mutasi.getBytes(StandardCharsets.UTF_8));
+//            System.out.println(" [x] SEND MUTASI: '" + mutasi + "'");
+//        }
+//    }
+
 }

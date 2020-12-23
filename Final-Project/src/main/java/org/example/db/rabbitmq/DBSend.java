@@ -15,7 +15,6 @@ public class DBSend {
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare("messageFromSaldo", false, false, false, null);
-//            String message = "Assalamualaikum";
             channel.basicPublish("", "messageFromSaldo", null, message.getBytes(StandardCharsets.UTF_8));
             System.out.println(" [x] Sent '" + message + "'");
         } catch (Exception e) {
@@ -29,11 +28,62 @@ public class DBSend {
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare("loginFromDB", false, false, false, null);
-//            String message = "Assalamualaikum";
             channel.basicPublish("", "loginFromDB", null, message.getBytes(StandardCharsets.UTF_8));
             System.out.println(" [x] Sent '" + message + "'");
         } catch (Exception e) {
             System.out.println("Gagal mengirim Data Login ke RestApi.." + e);
+        }
+    }
+
+    public void sendLogouttoAPI (String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("logoutFromDB", false, false, false, null);
+            channel.basicPublish("", "logoutFromDB", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Data logout ke RestApi.." + e);
+        }
+    }
+
+    public void sendToDummy(String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("checkDummy", false, false, false, null);
+            channel.basicPublish("", "checkDummy", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Data ke Dummy :(" + e);
+        }
+    }
+
+    public void sendMutasiToAPI (String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("sendMutasi", false, false, false, null);
+            channel.basicPublish("", "sendMutasi", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Mutasi ke RestApi.." + e);
+        }
+    }
+
+    public void sendRegisResponse(String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("regisFromDB", false, false, false, null);
+            channel.basicPublish("", "regisFromDB", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Register ke RestApi.." + e);
         }
     }
 }

@@ -15,6 +15,7 @@ public class APIReceive {
     protected String message = "";
     private String saldoResponse = "";
     private String loginResponse = "";
+    private String logoutResponse = "";
     private boolean success=false;
 
     public void setMessage(String message) {
@@ -34,7 +35,7 @@ public class APIReceive {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.queueDeclare("messageFromDatabase", false, false, false, null);
+        channel.queueDeclare("regisFromDB", false, false, false, null);
         System.out.println(" [*] Waiting for messages from database");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -42,7 +43,7 @@ public class APIReceive {
             System.out.println(" [x] Received '" + message + "'");
             this.message = message;
         };
-        channel.basicConsume("messageFromDatabase", true, deliverCallback, consumerTag -> { });
+        channel.basicConsume("regisFromDB", true, deliverCallback, consumerTag -> { });
         return this.message;
     }
 
@@ -69,21 +70,20 @@ public class APIReceive {
                 object.put("response", 200);
                 object.put("status", "Success");
                 object.put("message", "Success Check Saldo");
-                object.put("Saldo", this.message);
                 saldoResponse = object.toJSONString();
                 success = false;
             } else {
                 JSONObject object = new JSONObject();
                 object.put("response", 400);
                 object.put("status", "Error");
-                object.put("message", "Anda Tidak memiliki Akses untuk cek saldo, Mohon Login Terlebih Dahulu!!!");
+                object.put("message", "Anda Tidak memiliki Akses untuk cek saldo, Mohon Login Terlebih Dahulu.");
                 saldoResponse = object.toJSONString();
                 success = false;
             }
         } catch (Exception e) {
             System.out.println("Exception login Res: " + e);
         }
-        System.out.println("isi saldo response: "+this.getSaldoResponse());
+        System.out.println("isi saldo response: " + this.getSaldoResponse());
         return this.getSaldoResponse();
     }
 
@@ -99,7 +99,6 @@ public class APIReceive {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), "UTF-8");
                 System.out.println(" [x] Data Received '" + message + "'");
-//                this.message = message;
                 loginResponse = response(message);
             };
             channel.basicConsume("loginFromDB", true, deliverCallback, consumerTag -> { });
@@ -113,9 +112,37 @@ public class APIReceive {
             } catch (Exception e) {
                 System.out.println("ERROR DATA Thread sleep: " + e);
             }
-
         }
         return loginResponse;
+    }
+
+    public String logoutAPI() throws IOException, TimeoutException {
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+
+            channel.queueDeclare("logoutFromDB", false, false, false, null);
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Data Received '" + message + "'");
+                logoutResponse = responseLogout(message);
+            };
+            channel.basicConsume("logoutFromDB", true, deliverCallback, consumerTag -> { });
+
+        } catch (Exception e) {
+            System.out.println("ERROR DATA LOGOUT APIRECEIVE: " + e);
+        }
+        while (logoutResponse.equals("")) {
+            try {
+                Thread.sleep(0);
+            } catch (Exception e) {
+                System.out.println("ERROR DATA Thread sleep logout: " + e);
+            }
+        }
+        return logoutResponse;
     }
 
     public String getMessage() {
@@ -130,7 +157,6 @@ public class APIReceive {
                 object.put("response", 200);
                 object.put("status", "Success");
                 object.put("message", "Success Login");
-                object.put("ID Nasabah", message);
                 loginResponse = object.toJSONString();
             } else {
                 JSONObject object = new JSONObject();
@@ -143,5 +169,26 @@ public class APIReceive {
             System.out.println("ERROR DATA LOGIN APIRecv: " + e);
         }
         return loginResponse;
+    }
+    public String responseLogout(String message) {
+        String logoutResponse = "";
+        try {
+            if (!message.equals("0")) {
+                JSONObject object = new JSONObject();
+                object.put("response", 200);
+                object.put("status", "Success");
+                object.put("message", "Success Logout");
+                logoutResponse = object.toJSONString();
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("response", 400);
+                object.put("status", "Error");
+                object.put("message", "Error Logout:(");
+                logoutResponse = object.toJSONString();
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR DATA LOGIN APIRecv: " + e);
+        }
+        return logoutResponse;
     }
 }

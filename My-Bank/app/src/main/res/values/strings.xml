@@ -9,7 +9,7 @@
     <string name="forgot">Lupa Password?</string>
     <string name="naleng">Nama Lengkap</string>
     <string name="alamat">Alamat</string>
-    <string name="ttl">Tanggal Lahir</string>
+    <string name="ttl">Tanggal Lahir (YYYY-MM-DD)</string>
     <string name="mail">E-mail</string>
     <string name="telp">No. Telepon</string>
     <string name="pin_reg">PIN (Digunakan saat transfer)</string>
@@ -28,4 +28,5 @@
     <string name="pesan">Pesan</string>
     <string name="set_date">Pilih tanggal</string>
     <string name="rp">Rp</string>
+    <string name="gender">Gender</string>
 </resources>

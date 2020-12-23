@@ -3,75 +3,42 @@ package com.example.mybank.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Nasabah {
-    @SerializedName("id_nasabah")
-    @Expose
-    private int id;
 
-    @SerializedName("nama_lengkap")
-    @Expose
-    private String nama;
-
-    @SerializedName("email")
-    @Expose
+    private String nama_lengkap;
     private String email;
-
-    @SerializedName("username")
-    @Expose
     private String username;
-
-    @SerializedName("password")
-    @Expose
     private String password;
-
-    @SerializedName("gender")
-    @Expose
     private String gender;
-
-    @SerializedName("ktp")
-    @Expose
-    private String ktp;
-
-    @SerializedName("tgl_lahir")
-    @Expose
-    private String tgl_lahir;
-
-    @SerializedName("no_telp")
-    @Expose
+    private String no_ktp;
+    private String birth_date;
     private String no_telp;
-
-    @SerializedName("alamat")
-    @Expose
     private String alamat;
 
-    @SerializedName("saldo")
-    @Expose
-    private String saldo;
-
-    @SerializedName("loginStatus")
-    @Expose
-    private String loginStatus;
-
-    public int getId() {
-        return id;
+    public Nasabah(String nama_lengkap, String email, String username, String password, String gender, String no_ktp, String birth_date, String no_telp, String alamat) {
+        this.nama_lengkap = nama_lengkap;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.gender = gender;
+        this.no_ktp = no_ktp;
+        this.birth_date = birth_date;
+        this.no_telp = no_telp;
+        this.alamat = alamat;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getNama_lengkap() {
+        return nama_lengkap;
     }
-
-    public String getNama() {
-        return nama;
-    }
-
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setNama_lengkap(String nama_lengkap) {
+        this.nama_lengkap = nama_lengkap;
     }
 
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -79,7 +46,6 @@ public class Nasabah {
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -87,7 +53,6 @@ public class Nasabah {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -95,31 +60,27 @@ public class Nasabah {
     public String getGender() {
         return gender;
     }
-
     public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public String getKtp() {
-        return ktp;
+    public String getNo_ktp() {
+        return no_ktp;
+    }
+    public void setNo_ktp(String no_ktp) {
+        this.no_ktp = no_ktp;
     }
 
-    public void setKtp(String ktp) {
-        this.ktp = ktp;
+    public String getBirth_date() {
+        return birth_date;
     }
-
-    public String getTgl_lahir() {
-        return tgl_lahir;
-    }
-
-    public void setTgl_lahir(String tgl_lahir) {
-        this.tgl_lahir = tgl_lahir;
+    public void setBirth_date(String no_ktp) {
+        this.birth_date = no_ktp;
     }
 
     public String getNo_telp() {
         return no_telp;
     }
-
     public void setNo_telp(String no_telp) {
         this.no_telp = no_telp;
     }
@@ -127,24 +88,7 @@ public class Nasabah {
     public String getAlamat() {
         return alamat;
     }
-
     public void setAlamat(String alamat) {
         this.alamat = alamat;
-    }
-
-    public String getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(String saldo) {
-        this.saldo = saldo;
-    }
-
-    public String getLoginStatus() {
-        return loginStatus;
-    }
-
-    public void setLoginStatus(String loginStatus) {
-        this.loginStatus = loginStatus;
     }
 }

@@ -18,6 +18,12 @@ public class Transaksi {
     @Column(name = "id_nasabah")
     private int id_nasabah;
 
+    @Column(name = "kode_transaksi")
+    private String kode_transaksi;
+
+    @Column(name = "rekening_tujuan")
+    private String rekening_tujuan;
+
     @CreationTimestamp
     @Column(name = "transaction_date", insertable = false, updatable = false, nullable = false)
     private Date transaction_date;
@@ -29,13 +35,6 @@ public class Transaksi {
     private int trans_money;
 
     public Transaksi() {
-    }
-
-    public Transaksi(int id_nasabah, Date transaction_date, String tipe_transaksi, int trans_money) {
-        this.id_nasabah = id_nasabah;
-        this.transaction_date = transaction_date;
-        this.tipe_transaksi = tipe_transaksi;
-        this.trans_money = trans_money;
     }
 
     // -------------------- SETTER & GETTER ID TRANSACTION --------------------
@@ -52,6 +51,22 @@ public class Transaksi {
     }
     public void setId_nasabah(int id_nasabah) {
         this.id_nasabah = id_nasabah;
+    }
+
+    // -------------------- SETTER & GETTER KODE TRANSAKSI --------------------
+    public String getKode_transaksi() {
+        return kode_transaksi;
+    }
+    public void setKode_transaksi(String kode_transaksi) {
+        this.kode_transaksi = kode_transaksi;
+    }
+
+    // -------------------- SETTER & GETTER REKENING TUJUAN --------------------
+    public String getRekening_tujuan() {
+        return rekening_tujuan;
+    }
+    public void setRekening_tujuan(String rekening_tujuan) {
+        this.rekening_tujuan = rekening_tujuan;
     }
 
     // -------------------- SETTER & GETTER TRANSACTION DATE --------------------
