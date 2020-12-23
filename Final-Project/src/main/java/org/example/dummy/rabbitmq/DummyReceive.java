@@ -1,21 +1,58 @@
 package org.example.dummy.rabbitmq;
 
+import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import org.example.db.models.Transaksi;
+import org.example.db.service.DummyDAO;
+import org.example.db.service.NasabahDAO;
 import org.json.simple.JSONObject;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class DummyReceive {
+    private ConnectionFactory factory;
+    private Connection connection;
+    private Channel channel;
+    private EntityManager entityManager;
+    private DummyDAO dummyDAO;
     String saldoDummy;
     protected String message = "";
     private String saldoResponse = "";
     private String loginResponse = "";
     private boolean success=false;
+
+    public void conD() {
+        this.entityManager = Persistence
+                .createEntityManagerFactory("user-unit")
+                .createEntityManager();
+        dummyDAO = new DummyDAO(entityManager);
+        try {
+            entityManager.getTransaction().begin();
+        } catch (IllegalStateException e) {
+            entityManager.getTransaction().rollback();
+        }
+    }
+    public void com() {
+        try {
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } catch (IllegalStateException e) {
+            entityManager.getTransaction().rollback();
+        }
+    }
+    public void connectRabbitMQ() throws IOException, TimeoutException {
+        factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        connection = factory.newConnection();
+    }
 
     public void setSaldoDummy(String saldoDummy) {
         this.saldoDummy = saldoDummy;
@@ -24,7 +61,6 @@ public class DummyReceive {
     public String getMessage() {
         return message;
     }
-
     public void setMessage(String message) {
         this.message = message;
     }
@@ -32,7 +68,6 @@ public class DummyReceive {
     public String getSaldoResponse() {
         return saldoResponse;
     }
-
     public void setSaldoResponse(String saldoResponse) {
         this.saldoResponse = saldoResponse;
     }
@@ -132,5 +167,27 @@ public class DummyReceive {
 
     public String getSaldoDummy() {
         return this.saldoDummy;
+    }
+
+    public void transferedMoney() {
+        try {
+            connectRabbitMQ();
+            channel = connection.createChannel();
+            channel.queueDeclare("transferDummy", false, false, false, null);
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String nbString = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                System.out.println(" [x] Received Transfer'" + nbString + "'");
+                Transaksi tr = new Gson().fromJson(nbString, Transaksi.class);
+                conD();
+//                int res = naDao.userCheckId(tr.getUsername());
+//                if (res != 0) {
+                    dummyDAO.transfered(nbString);
+//                }
+                com();
+            };
+            channel.basicConsume("transferDummy", true, deliverCallback, consumerTag -> { });
+        } catch (Exception e) {
+            System.out.println("ERROR REGISTRASI NASABAH = " + e);
+        }
     }
 }

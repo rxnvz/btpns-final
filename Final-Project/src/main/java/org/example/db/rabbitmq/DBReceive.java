@@ -285,9 +285,13 @@ public class DBReceive {
                 int res = naDao.userCheckId(tr.getUsername());
                 if (res != 0) {
                     naDao.doTransfer(nbString);
-                    com();
-                    conD();
-                    dummyDAO.transfered(nbString);
+//                    com();
+//                    conD();
+                }
+                try{
+                    send.sendTransfer(nbString);
+                } catch (Exception e) {
+                    System.out.println("Error send transfer: " + e);
                 }
                 com();
             };

@@ -23,7 +23,6 @@ public class NasabahAPI {
     public ResponseEntity<?> newNasabah (@RequestBody Nasabah nb) {
         try {
             send.newNasabah(new Gson().toJson(nb));
-            recv.receiveFromDB();
             JSONObject object = new JSONObject();
             object.put("response",200);
             object.put("status","Success");

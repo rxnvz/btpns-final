@@ -48,7 +48,7 @@ public class DBSend {
         }
     }
 
-    public void sendToDummy(String message) throws IOException, TimeoutException {
+    public void sendToDummy (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
@@ -74,7 +74,7 @@ public class DBSend {
         }
     }
 
-    public void sendRegisResponse(String message) throws IOException, TimeoutException {
+    public void sendRegisResponse (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
@@ -97,6 +97,19 @@ public class DBSend {
             System.out.println(" [x] Sent '" + message + "'");
         } catch (Exception e) {
             System.out.println("Gagal mengirim Data Login ke RestApi.." + e);
+        }
+    }
+
+    public void sendTransfer (String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("transferDummy", false, false, false, null);
+            channel.basicPublish("", "transferDummy", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Data Transfer ke Dummy :(" + e);
         }
     }
 }

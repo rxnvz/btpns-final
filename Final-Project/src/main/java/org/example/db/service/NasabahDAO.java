@@ -125,21 +125,23 @@ public class NasabahDAO {
         tr.setTipe_transaksi("Transfer Uang");
         entityManager.persist(tr);
 
-        Nasabah nb = entityManager.find(Nasabah.class, tr.getUsername());
+        Nasabah nb = entityManager.find(Nasabah.class, tr.getId_nasabah());
 //        if (nb.getUsername().equals(tr.getUsername())) {
             nb.setSaldo(nb.getSaldo()-tr.getTrans_money());
             entityManager.merge(nb);
 //        }
 
-        Nasabah nbTax = entityManager.find(Nasabah.class, tr.getUsername());
+        Nasabah nbTax = entityManager.find(Nasabah.class, tr.getId_nasabah());
 //        if (nb.getUsername().equals(tr.getUsername())) {
             nbTax.setSaldo(nbTax.getSaldo() - 6500);
+            entityManager.merge(nbTax);
 //        }
 
         Transaksi tax = new Transaksi();
         tax.setTipe_transaksi("Biaya Admin");
         tax.setKode_transaksi("200");
         tax.setTrans_money(6500);
+        tax.setId_nasabah(tr.getId_nasabah());
         tax.setUsername(tr.getUsername());
         entityManager.persist(tax);
     }
