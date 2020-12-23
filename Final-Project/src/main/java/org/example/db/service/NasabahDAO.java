@@ -32,6 +32,7 @@ public class NasabahDAO {
         tr.setKode_transaksi("200");
         tr.setTrans_money(nb.getSaldo());
         tr.setId_nasabah(nb.getId_nasabah());
+        tr.setUsername(nb.getUsername());
         entityManager.persist(tr);
     }
 
@@ -81,11 +82,10 @@ public class NasabahDAO {
         }
     }
 
-    public int userCheckId(String trStr) {
-        Transaksi tr = new Gson().fromJson(trStr, Transaksi.class);
-        String select = "SELECT id_nasabah FROM Nasabah WHERE id_nasabah=:id_nasabah AND loginStatus=:loginStatus";
+    public int userCheckId(String username) {
+        String select = "SELECT id_nasabah FROM Nasabah WHERE username=:username AND loginStatus=:loginStatus";
         Query q = entityManager.createQuery(select);
-        q.setParameter("id_nasabah", tr.getId_nasabah());
+        q.setParameter("username", username);
         q.setParameter("loginStatus", "true");
 
         if (q.getResultList().size() != 0) {
@@ -125,18 +125,22 @@ public class NasabahDAO {
         tr.setTipe_transaksi("Transfer Uang");
         entityManager.persist(tr);
 
-        Nasabah nb = entityManager.find(Nasabah.class, tr.getId_nasabah());
-        nb.setSaldo(nb.getSaldo()-tr.getTrans_money());
-        entityManager.merge(nb);
+        Nasabah nb = entityManager.find(Nasabah.class, tr.getUsername());
+//        if (nb.getUsername().equals(tr.getUsername())) {
+            nb.setSaldo(nb.getSaldo()-tr.getTrans_money());
+            entityManager.merge(nb);
+//        }
 
-        Nasabah nbTax = entityManager.find(Nasabah.class, tr.getId_nasabah());
-        nbTax.setSaldo(nbTax.getSaldo() - 6500);
+        Nasabah nbTax = entityManager.find(Nasabah.class, tr.getUsername());
+//        if (nb.getUsername().equals(tr.getUsername())) {
+            nbTax.setSaldo(nbTax.getSaldo() - 6500);
+//        }
 
         Transaksi tax = new Transaksi();
         tax.setTipe_transaksi("Biaya Admin");
         tax.setKode_transaksi("200");
         tax.setTrans_money(6500);
-        tax.setId_nasabah(tr.getId_nasabah());
+        tax.setUsername(tr.getUsername());
         entityManager.persist(tax);
     }
 

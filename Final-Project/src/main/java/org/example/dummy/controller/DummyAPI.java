@@ -28,7 +28,11 @@ public class DummyAPI {
     public ResponseEntity<?> checkSaldo(@PathVariable("rekening") String rekening) {
         try {
             send.getSaldo(rekening);
-            recv.recvSaldoFromDB();
+            String response = recv.recvSaldoFromDB();
+            while (response == null || response.equals("")) {
+                Thread.sleep(500);
+            }
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("ERROR CHECK SALDO DUMMY: " + e);
         }

@@ -18,6 +18,9 @@ public class Transaksi {
     @Column(name = "id_nasabah")
     private int id_nasabah;
 
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "kode_transaksi")
     private String kode_transaksi;
 
@@ -51,6 +54,14 @@ public class Transaksi {
     }
     public void setId_nasabah(int id_nasabah) {
         this.id_nasabah = id_nasabah;
+    }
+
+    // -------------------- SETTER & GETTER USERNAME NASABAH --------------------
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     // -------------------- SETTER & GETTER KODE TRANSAKSI --------------------

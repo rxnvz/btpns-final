@@ -69,7 +69,8 @@ public class APIReceive {
                 JSONObject object = new JSONObject();
                 object.put("response", 200);
                 object.put("status", "Success");
-                object.put("message", "Success Check Saldo");
+                object.put("message", this.message);
+//                object.put("Saldo", this.message);
                 saldoResponse = object.toJSONString();
                 success = false;
             } else {

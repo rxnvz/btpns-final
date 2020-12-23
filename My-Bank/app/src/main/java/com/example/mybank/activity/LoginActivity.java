@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.mybank.databinding.ActivityLoginBinding;
 import com.example.mybank.model.APIResponse;
 import com.example.mybank.model.Login;
 import com.example.mybank.viewmodels.NasabahViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -83,6 +85,15 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("com.example.mybank.login", binding.usernameLoginET.getText().toString());
                 editor.apply();
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Gagal Login")
+                        .setMessage("Username atau password salah")
+                        .setNegativeButton("Tutup", null)
+                        .show();
             }
         });
     }

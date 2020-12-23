@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "nasabah")
 public class Nasabah {
-    @Id
+
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_nasabah")
     private int id_nasabah;
@@ -21,6 +21,7 @@ public class Nasabah {
     @Column(name = "email")
     private String email;
 
+    @Id
     @Column(name = "username")
     private String username;
 

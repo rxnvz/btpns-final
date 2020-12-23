@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.mybank.model.APIResponse;
 import com.example.mybank.model.Login;
 import com.example.mybank.model.Nasabah;
+import com.example.mybank.model.Transfer;
 import com.example.mybank.repositories.NasabahRepository;
 
 public class NasabahViewModel extends ViewModel {
@@ -40,6 +41,14 @@ public class NasabahViewModel extends ViewModel {
             nbRepo.getInstance();
         }
         liveData = nbRepo.getSaldo(s);
+        return liveData;
+    }
+
+    public LiveData<APIResponse> transferUang(Transfer tf) {
+        if (liveData == null) {
+            nbRepo = nbRepo.getInstance();
+        }
+        liveData = nbRepo.doTransfer(tf);
         return liveData;
     }
 }

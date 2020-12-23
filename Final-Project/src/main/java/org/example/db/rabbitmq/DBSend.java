@@ -86,4 +86,17 @@ public class DBSend {
             System.out.println("Gagal mengirim Register ke RestApi.." + e);
         }
     }
+
+    public void sendLogintoAPID (String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("loginFromDBD", false, false, false, null);
+            channel.basicPublish("", "loginFromDBD", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Data Login ke RestApi.." + e);
+        }
+    }
 }

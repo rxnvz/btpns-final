@@ -2,10 +2,12 @@ package org.example.db.service;
 
 import com.google.gson.Gson;
 import org.example.db.models.DummyBank;
+import org.example.db.models.Nasabah;
 import org.example.db.models.Transaksi;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import java.util.List;
 
 public class DummyDAO {
@@ -23,8 +25,39 @@ public class DummyDAO {
         entityManager.persist(db);
     }
 
-    public List<DummyBank> checkSaldoDummy(String rekening) {
-        return entityManager.createQuery("SELECT d FROM DummyBank d WHERE d.no_rek='" + rekening + "'", DummyBank.class).getResultList();
+    public int checkSaldoDummy(String rekening) {
+        return entityManager.createQuery("SELECT saldo_dummy FROM DummyBank WHERE no_rek='" + rekening + "'", DummyBank.class).getFirstResult();
+    }
+
+    public int getSaldo(String nb) {
+        String query = "SELECT saldo_dummy FROM DummyBank WHERE no_rek=:no_rek";
+        Query q = entityManager.createQuery(query);
+        q.setParameter("no_rek", nb);
+        if (q.getResultList().size()!=0){
+            return (int)q.getResultList().get(0);
+        } else {
+            return q.getResultList().size();
+        }
+    }
+
+    public int login(String nbStr) {
+        DummyBank nb = new Gson().fromJson(nbStr, DummyBank.class);
+        String select = "SELECT no_rek FROM Nasabah WHERE username=:username AND password=:password";
+        Query query = entityManager.createQuery(select);
+        query.setParameter("username", nb.getUsername());
+        query.setParameter("password", nb.getPassword());
+        if (query.getResultList().size() != 0) {
+            return (int)query.getResultList().get(0);
+        } else {
+            return query.getResultList().size();
+        }
+    }
+
+    public int updateStatus(DummyBank nb, String stats) {
+        DummyBank nbh = entityManager.find(DummyBank.class, nb.getNo_rek());
+        nbh.setLoginStatus(stats);
+        entityManager.merge(nbh);
+        return 1;
     }
 
     public void transfered(String trString) {

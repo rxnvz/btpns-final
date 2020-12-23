@@ -3,6 +3,7 @@ package com.example.mybank.networking;
 import com.example.mybank.model.Login;
 import com.example.mybank.model.Nasabah;
 import com.example.mybank.model.APIResponse;
+import com.example.mybank.model.Transfer;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,7 +26,7 @@ public interface NasabahAPI {
     Call<APIResponse> getSaldo(@Path("username")String checkSaldo);
 
     @POST("/transfer")
-    Call<APIResponse> doTransfer();
+    Call<APIResponse> doTransfer(@Body Transfer body);
 
     @POST("/mutasi")
     Call<APIResponse> doMutasi();

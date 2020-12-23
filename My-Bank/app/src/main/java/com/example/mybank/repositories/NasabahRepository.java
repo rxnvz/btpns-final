@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.mybank.model.APIResponse;
 import com.example.mybank.model.Login;
 import com.example.mybank.model.Nasabah;
+import com.example.mybank.model.Transfer;
 import com.example.mybank.networking.NasabahAPI;
 import com.example.mybank.networking.RetrofitService;
 import com.google.gson.Gson;
@@ -86,5 +87,28 @@ public class NasabahRepository {
             }
         });
         return checkSaldo;
+    }
+
+    public MutableLiveData<APIResponse> doTransfer(Transfer transfer) {
+        String req = new Gson().toJson(transfer);
+        System.out.println("Transfer Request: " + req);
+        MutableLiveData<APIResponse> result = new MutableLiveData<>();
+        nbAPI.doTransfer(transfer).enqueue(new Callback<APIResponse>() {
+
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> responses) {
+                if (responses.isSuccessful()) {
+                    result.setValue(responses.body());
+                    System.out.println("Isi response register: " + responses.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                System.out.println("Error register");
+                System.out.println("Isian error transfer: " + t.getMessage());
+            }
+        });
+        return result;
     }
 }

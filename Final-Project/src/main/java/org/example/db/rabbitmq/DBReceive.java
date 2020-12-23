@@ -220,6 +220,33 @@ public class DBReceive {
             System.out.println("ERROR REGISTRASI DUMMY = " + e);
         }
     }
+    public void doLoginD() {
+        try {
+            connectRabbitMQ();
+            channel = connection.createChannel();
+            channel.queueDeclare("doLoginD", false, false, false, null);
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String loginStr = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                System.out.println(" [x] Received '" + loginStr + "'");
+                conD();
+                int res = dummyDAO.login(loginStr);
+                if (res != 0) {
+                    DummyBank nb = new DummyBank();
+                    nb.setNo_rek(String.valueOf(res));
+                    dummyDAO.updateStatus(nb, "true");
+                }
+                try {
+                    send.sendLogintoAPID(String.valueOf(res));
+                } catch (Exception e) {
+                    System.out.println("ERROR SEND TO API DATA LOGIN: " + e);
+                }
+                com();
+            };
+            channel.basicConsume("doLoginD", true, deliverCallback, consumerTag -> { });
+        } catch (Exception e) {
+            System.out.println("ERROR LOGIN = " + e);
+        }
+    }
     public void checkSaldoDummy() {
         try {
             connectRabbitMQ();
@@ -230,8 +257,8 @@ public class DBReceive {
                 System.out.println(" [x] Received Cek Saldo Dummy: '" + rekening + "'");
                 conD();
                 try {
-                    List<DummyBank> dumdum = dummyDAO.checkSaldoDummy(rekening);
-                    send.sendToDummy(new Gson().toJson(dumdum));
+                    int dumdum = dummyDAO.getSaldo(rekening);
+                    send.sendToDummy(String.valueOf(dumdum));
                 } catch ( Exception e ) {
                     System.out.println("Error send Check Saldo Dummy = " + e);
                 }
@@ -253,8 +280,9 @@ public class DBReceive {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String nbString = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 System.out.println(" [x] Received Transfer'" + nbString + "'");
+                Transaksi tr = new Gson().fromJson(nbString, Transaksi.class);
                 con();
-                int res = naDao.userCheckId(nbString);
+                int res = naDao.userCheckId(tr.getUsername());
                 if (res != 0) {
                     naDao.doTransfer(nbString);
                     com();

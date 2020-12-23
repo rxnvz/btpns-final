@@ -32,7 +32,7 @@
                 android:textColor="@color/white"
                 android:layout_below="@id/saldoTV"
                 android:text="$15,990.00"
-                android:textSize="50sp"
+                android:textSize="35sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="70dp"/>
         </RelativeLayout>
