@@ -99,7 +99,7 @@ public class NasabahRepository {
             public void onResponse(Call<APIResponse> call, Response<APIResponse> responses) {
                 if (responses.isSuccessful()) {
                     result.setValue(responses.body());
-                    System.out.println("Isi response register: " + responses.body());
+                    System.out.println("Isi response transfer: " + responses.body());
                 }
             }
 

@@ -280,16 +280,17 @@ public class DBReceive {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String nbString = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 System.out.println(" [x] Received Transfer'" + nbString + "'");
-                Transaksi tr = new Gson().fromJson(nbString, Transaksi.class);
                 con();
-                int res = naDao.userCheckId(tr.getUsername());
+                int res = naDao.userCheckId(nbString);
+                Transaksi trans = new Gson().fromJson(nbString, Transaksi.class);
                 if (res != 0) {
-                    naDao.doTransfer(nbString);
+                    trans.setId_nasabah(res);
+                    naDao.doTransfer(new Gson().toJson(trans));
 //                    com();
 //                    conD();
                 }
                 try{
-                    send.sendTransfer(nbString);
+                    send.sendTransfer(new Gson().toJson(trans));
                 } catch (Exception e) {
                     System.out.println("Error send transfer: " + e);
                 }

@@ -82,10 +82,11 @@ public class NasabahDAO {
         }
     }
 
-    public int userCheckId(String username) {
+    public int userCheckId(String transaksi) {
+        Transaksi tr = new Gson().fromJson(transaksi, Transaksi.class);
         String select = "SELECT id_nasabah FROM Nasabah WHERE username=:username AND loginStatus=:loginStatus";
         Query q = entityManager.createQuery(select);
-        q.setParameter("username", username);
+        q.setParameter("username", tr.getUsername());
         q.setParameter("loginStatus", "true");
 
         if (q.getResultList().size() != 0) {

@@ -1,14 +1,16 @@
 package com.example.mybank.model;
 
-import java.util.Date;
-
 public class Transfer {
     private String username;
     private String kode_transaksi;
     private String rekening_tujuan;
     private int trans_money;
 
-    public Transfer(String uname, String kode_transaksi, String rekening_tujuan, int duit) {
+    public Transfer(String username, String kode_transaksi, String rekening_tujuan, int trans_money) {
+        this.username = username;
+        this.kode_transaksi = kode_transaksi;
+        this.rekening_tujuan = rekening_tujuan;
+        this.trans_money = trans_money;
     }
 
     public String getUsername() {
