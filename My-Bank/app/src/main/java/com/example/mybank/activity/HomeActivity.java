@@ -57,6 +57,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void onCLickGroup() {
+        binding.exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doLogout();
+            }
+        });
+
         binding.transferCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +77,25 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MutationActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    void doLogout() {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.mybank.login", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("com.example.mybank.login", "");
+
+        nbVM.keluar(username).observe(this, logoutResponse -> {
+            APIResponse response = logoutResponse;
+            if (response.getResponse() == 200) {
+                SharedPreferences sharedPref = getSharedPreferences("com.example.mybank.login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.clear();
+                editor.apply();
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

@@ -1,9 +1,13 @@
 package com.example.mybank.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mybank.model.APIResponse;
+import com.example.mybank.model.History;
 import com.example.mybank.model.Login;
+import com.example.mybank.model.MutasiResponse;
 import com.example.mybank.model.Nasabah;
 import com.example.mybank.model.Transfer;
 import com.example.mybank.networking.NasabahAPI;
@@ -71,6 +75,24 @@ public class NasabahRepository {
         return result;
     }
 
+    public MutableLiveData<APIResponse> logout(String logout) {
+        MutableLiveData<APIResponse> result = new MutableLiveData<>();
+        nbAPI.doLogout(logout).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                result.setValue(response.body());
+                System.out.println("Isi response logout: " + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                result.setValue(null);
+                System.out.println("Isian error Login: " + t.getMessage());
+            }
+        });
+        return result;
+    }
+
     public MutableLiveData<APIResponse> getSaldo(String s) {
         MutableLiveData<APIResponse> checkSaldo = new MutableLiveData<>();
         nbAPI.getSaldo(s).enqueue(new Callback<APIResponse>() {
@@ -105,8 +127,26 @@ public class NasabahRepository {
 
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
-                System.out.println("Error register");
-                System.out.println("Isian error transfer: " + t.getMessage());
+                System.out.println("Error transfer -- " + t.getMessage());
+            }
+        });
+        return result;
+    }
+
+    public MutableLiveData<MutasiResponse> getMutasi(History hs) {
+        String req = new Gson().toJson(hs);
+        System.out.println("Mutasi Request: " + req);
+        MutableLiveData<MutasiResponse> result = new MutableLiveData<>();
+        nbAPI.doMutasi(hs).enqueue(new Callback<MutasiResponse>() {
+            @Override
+            public void onResponse(Call<MutasiResponse> call, Response<MutasiResponse> response) {
+                result.setValue(response.body());
+                System.out.println("Isi response mutasi: " + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<MutasiResponse> call, Throwable t) {
+                System.out.println("Error get Mutasi! -- " + t.getMessage());
             }
         });
         return result;

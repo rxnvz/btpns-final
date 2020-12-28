@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="middle_yellow">#F7E733</color>
+    <color name="sunglow">#FFD23F</color>
+    <color name="mellon_apricot">#FFBF81</color>
+    <color name="key_lime">#EDFFAB</color>
+    <color name="cultured">#F7F7F9</color>
+    <color name="cyclamen">#E86A92</color>
+    <color name="med_aqua">#41E2BA</color>
+    <color name="black_shadow">#BBB5BD</color>
 </resources>

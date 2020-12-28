@@ -1,6 +1,8 @@
 package com.example.mybank.networking;
 
+import com.example.mybank.model.History;
 import com.example.mybank.model.Login;
+import com.example.mybank.model.MutasiResponse;
 import com.example.mybank.model.Nasabah;
 import com.example.mybank.model.APIResponse;
 import com.example.mybank.model.Transfer;
@@ -16,11 +18,11 @@ public interface NasabahAPI {
     @POST("/register")
     Call<APIResponse> newNasabah(@Body Nasabah body);
 
-    @POST("/login")
+    @PUT("/login")
     Call<APIResponse> doLogin(@Body Login body);
 
-    @PUT("/logout")
-    Call<APIResponse> doLogout();
+    @PUT("/logout/{username}")
+    Call<APIResponse> doLogout(@Path("username") String username);
 
     @GET("/home/{username}")
     Call<APIResponse> getSaldo(@Path("username")String checkSaldo);
@@ -29,5 +31,5 @@ public interface NasabahAPI {
     Call<APIResponse> doTransfer(@Body Transfer body);
 
     @POST("/mutasi")
-    Call<APIResponse> doMutasi();
+    Call<MutasiResponse> doMutasi(@Body History body);
 }

@@ -1,13 +1,17 @@
 package org.example.restapi.rabbitmq;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import org.example.db.models.History;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -16,8 +20,12 @@ public class APIReceive {
     private String saldoResponse = "";
     private String loginResponse = "";
     private String logoutResponse = "";
+    private String mutasiResponse = "";
     private boolean success=false;
 
+    public String getMessage() {
+        return message;
+    }
     public void setMessage(String message) {
         this.message = message;
     }
@@ -29,22 +37,52 @@ public class APIReceive {
         this.saldoResponse = saldoResponse;
     }
 
-    public String receiveFromDB() throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+    public String getMutasiResponse() {
+        return mutasiResponse;
+    }
+    public void setMutasiResponse(String mutasiResponse) {
+        this.mutasiResponse = mutasiResponse;
+    }
 
-        channel.queueDeclare("regisFromDB", false, false, false, null);
-        System.out.println(" [*] Waiting for messages from database");
+    public String mutasiFromDB() throws IOException, TimeoutException {
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
 
-        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            String message = new String(delivery.getBody(), "UTF-8");
-            System.out.println(" [x] Received '" + message + "'");
-            this.message = message;
-        };
-        channel.basicConsume("regisFromDB", true, deliverCallback, consumerTag -> { });
-        return this.message;
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received '" + message + "'");
+                this.message = message;
+                success = true;
+            };
+            channel.basicConsume("sendMutasi", true, deliverCallback, consumerTag -> { });
+            while (!success){
+                TimeUnit.MILLISECONDS.sleep(10);
+            }
+            if (!this.message.equals("0")) {
+                JSONObject object = new JSONObject();
+                object.put("response", 200);
+                object.put("status", "Success");
+                object.put("message", "Berhasil ambil data");
+                object.put("data", new JsonParser().parse(this.getMessage()));
+                mutasiResponse = object.toJSONString();
+                success = false;
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("response", 400);
+                object.put("status", "Error");
+                object.put("message", "Anda Tidak memiliki Akses untuk cek mutasi, Mohon Login Terlebih Dahulu.");
+                object.put("data", null);
+                mutasiResponse = object.toJSONString();
+                success = false;
+            }
+        } catch (Exception e) {
+            System.out.println("Exception get mutasi Res: " + e);
+        }
+        System.out.println("Isi mutasi: " + this.getMutasiResponse());
+        return this.getMutasiResponse();
     }
 
     public String getSaldo() throws IOException, TimeoutException {
@@ -144,10 +182,6 @@ public class APIReceive {
             }
         }
         return logoutResponse;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public String response(String message) {

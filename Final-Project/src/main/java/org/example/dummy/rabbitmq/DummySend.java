@@ -30,4 +30,26 @@ public class DummySend {
             System.out.println(" [x] SEND CHECK SALDO DUMMY '" + username + "'");
         }
     }
+
+    public void doLogin(String loginStr) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("doLoginD", false, false, false, null);
+            channel.basicPublish("", "doLoginD", null, loginStr.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] SEND LOGIN: '" + loginStr + "'");
+        }
+    }
+
+    public void doLogout(String username) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("doLogoutD", false, false, false, null);
+            channel.basicPublish("", "doLogoutD", null, username.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] SEND LOGOUT DUMMY: '" + username + "'");
+        }
+    }
 }

@@ -69,12 +69,6 @@ public class TransferActivity extends AppCompatActivity {
         if (kode_transaksi.equals("") || rekening_tujuan.equals("") || trans_money.equals("")) {
             Toast.makeText(getApplicationContext(), "Lengkapi data transfer!!", Toast.LENGTH_SHORT).show();
         } else {
-            System.out.println("Isi username: " + username);
-            System.out.println("Isi kode transaksi: " + kode_transaksi);
-            System.out.println("Isi rekening tujuan: " + rekening_tujuan);
-            System.out.println("Isi transfered money: " + trans_money);
-            System.out.println("Isi duit: " + duit);
-
             Transfer tf = new Transfer(username, kode_transaksi, rekening_tujuan, duit);
             nbVM.transferUang(tf).observe(this, tfResponse -> {
                 System.out.println("Transfer Response: " + tfResponse.getMessage());

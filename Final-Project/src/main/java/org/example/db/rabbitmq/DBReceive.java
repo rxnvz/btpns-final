@@ -5,10 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
-import org.example.db.models.DummyBank;
-import org.example.db.models.Mutasi;
-import org.example.db.models.Nasabah;
-import org.example.db.models.Transaksi;
+import org.example.db.models.*;
 import org.example.db.service.DummyDAO;
 import org.example.db.service.NasabahDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ public class DBReceive {
     private NasabahDAO naDao;
     private DummyDAO dummyDAO;
     private Boolean loginStatus = false;
-    List<Nasabah> nbMutasi;
 
     @Autowired
     private DBSend send = new DBSend();
@@ -147,33 +143,35 @@ public class DBReceive {
             System.out.println("ERROR GET SALDO = " + e);
         }
     }
-//    public void getMutasi() {
-//        try {
-//            connectRabbitMQ();
-//            channel = connection.createChannel();
-//            channel.queueDeclare("getMutasi", false, false, false, null);
-//            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-//                String mutasi = new String(delivery.getBody(), StandardCharsets.UTF_8);
-//                System.out.println(" [x] Received '" + mutasi + "'");
-//                con();
-//                int res = naDao.userCheckIdMutasi(mutasi);
-//                if (res != 0){
-//                    nbMutasi = naDao.getMutasi(mutasi);
-//                } else {
-//                    nbMutasi.isEmpty();
-//                }
-//                try {
-//                    send.sendMutasiToAPI(new Gson().toJson(nbMutasi));
-//                } catch (Exception e) {
-//                    System.out.println("ERROR SEND TO API GET SALDO: " + e);
-//                }
-//                com();
-//            };
-//            channel.basicConsume("getMutasi", true, deliverCallback, consumerTag -> { });
-//        } catch (Exception e) {
-//            System.out.println("ERROR GET SALDO = " + e);
-//        }
-//    }
+    public void getMutasi() {
+        try {
+            connectRabbitMQ();
+            channel = connection.createChannel();
+            channel.queueDeclare("getMutasi", false, false, false, null);
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String mutasi = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                System.out.println(" [x] Received '" + mutasi + "'");
+                con();
+                int res = naDao.userCheckIdMutasi(mutasi);
+                Mutasi mt = new Gson().fromJson(mutasi, Mutasi.class);
+                try {
+                    if (res != 0){
+                        mt.setId_nasabah(res);
+                        List<History> nbMutasi = naDao.getMutasi(new Gson().toJson(mt));
+                        String isian = new Gson().toJson(nbMutasi);
+                        System.out.println("Isian: " + isian);
+                        send.sendMutasiToAPI(new Gson().toJson(nbMutasi));
+                    }
+                } catch (Exception e) {
+                    System.out.println("ERROR SEND TO API GET SALDO: " + e);
+                }
+                com();
+            };
+            channel.basicConsume("getMutasi", true, deliverCallback, consumerTag -> { });
+        } catch (Exception e) {
+            System.out.println("ERROR GET SALDO = " + e);
+        }
+    }
     public void doLogout() {
         try {
             connectRabbitMQ();
@@ -229,8 +227,9 @@ public class DBReceive {
                 String loginStr = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 System.out.println(" [x] Received '" + loginStr + "'");
                 conD();
-                int res = dummyDAO.login(loginStr);
-                if (res != 0) {
+                String res = dummyDAO.login(loginStr);
+                System.out.println("Isi res dummy: " + res);
+                if (!res.equals("0")) {
                     DummyBank nb = new DummyBank();
                     nb.setNo_rek(String.valueOf(res));
                     dummyDAO.updateStatus(nb, "true");
@@ -269,6 +268,34 @@ public class DBReceive {
             System.out.println("Error checkSaldoDummy= " + e);
         }
     }
+    public void doLogoutD() {
+        try {
+            connectRabbitMQ();
+            channel = connection.createChannel();
+            channel.queueDeclare("doLogoutD", false, false, false, null);
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String loginStr = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                System.out.println(" [x] Received '" + loginStr + "'");
+                conD();
+                String res = dummyDAO.logout(loginStr);
+                System.out.println("Isi res dummy: " + res);
+                if (!res.equals("0")) {
+                    DummyBank nb = new DummyBank();
+                    nb.setNo_rek(String.valueOf(res));
+                    dummyDAO.updateStatus(nb, "false");
+                }
+                try {
+                    send.sendLogouttoAPID(String.valueOf(res));
+                } catch (Exception e) {
+                    System.out.println("ERROR SEND TO API DATA LOGIN: " + e);
+                }
+                com();
+            };
+            channel.basicConsume("doLogoutD", true, deliverCallback, consumerTag -> { });
+        } catch (Exception e) {
+            System.out.println("ERROR LOGIN = " + e);
+        }
+    }
 
     // ---------------------------- DB RECEIVE FOR TRANSFER ----------------------------
 
@@ -286,8 +313,6 @@ public class DBReceive {
                 if (res != 0) {
                     trans.setId_nasabah(res);
                     naDao.doTransfer(new Gson().toJson(trans));
-//                    com();
-//                    conD();
                 }
                 try{
                     send.sendTransfer(new Gson().toJson(trans));

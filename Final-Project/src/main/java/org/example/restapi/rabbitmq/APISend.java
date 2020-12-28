@@ -65,15 +65,15 @@ public class APISend {
         }
     }
 
-//    public void getMutasi(String mutasi) throws IOException, TimeoutException {
-//        ConnectionFactory factory = new ConnectionFactory();
-//        factory.setHost("localhost");
-//        try (Connection con = factory.newConnection();
-//             Channel channel = con.createChannel()) {
-//            channel.queueDeclare("getMutasi", false, false, false, null);
-//            channel.basicPublish("", "getMutasi", null, mutasi.getBytes(StandardCharsets.UTF_8));
-//            System.out.println(" [x] SEND MUTASI: '" + mutasi + "'");
-//        }
-//    }
+    public void getMutasi(String mutasi) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("getMutasi", false, false, false, null);
+            channel.basicPublish("", "getMutasi", null, mutasi.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] SEND MUTASI: '" + mutasi + "'");
+        }
+    }
 
 }

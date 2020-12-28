@@ -21,7 +21,6 @@ public class DBSend {
             System.out.println("Gagal mengirim Saldo ke RestApi.." + e);
         }
     }
-
     public void sendLogintoAPI (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -34,7 +33,6 @@ public class DBSend {
             System.out.println("Gagal mengirim Data Login ke RestApi.." + e);
         }
     }
-
     public void sendLogouttoAPI (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -47,20 +45,6 @@ public class DBSend {
             System.out.println("Gagal mengirim Data logout ke RestApi.." + e);
         }
     }
-
-    public void sendToDummy (String message) throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        try (Connection connection = factory.newConnection();
-             Channel channel = connection.createChannel()) {
-            channel.queueDeclare("checkDummy", false, false, false, null);
-            channel.basicPublish("", "checkDummy", null, message.getBytes(StandardCharsets.UTF_8));
-            System.out.println(" [x] Sent '" + message + "'");
-        } catch (Exception e) {
-            System.out.println("Gagal mengirim Data ke Dummy :(" + e);
-        }
-    }
-
     public void sendMutasiToAPI (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -73,7 +57,6 @@ public class DBSend {
             System.out.println("Gagal mengirim Mutasi ke RestApi.." + e);
         }
     }
-
     public void sendRegisResponse (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -87,6 +70,21 @@ public class DBSend {
         }
     }
 
+
+
+
+    public void sendToDummy (String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("checkDummy", false, false, false, null);
+            channel.basicPublish("", "checkDummy", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Data ke Dummy :(" + e);
+        }
+    }
     public void sendLogintoAPID (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -99,6 +97,21 @@ public class DBSend {
             System.out.println("Gagal mengirim Data Login ke RestApi.." + e);
         }
     }
+    public void sendLogouttoAPID (String message) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            channel.queueDeclare("logoutFromDBD", false, false, false, null);
+            channel.basicPublish("", "logoutFromDBD", null, message.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + message + "'");
+        } catch (Exception e) {
+            System.out.println("Gagal mengirim Data Logout ke RestApi.." + e);
+        }
+    }
+
+
+
 
     public void sendTransfer (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();

@@ -2,8 +2,13 @@ package com.example.mybank.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,6 +18,12 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.example.mybank.R;
+import com.example.mybank.adapter.MutasiAdapter;
+import com.example.mybank.databinding.ActivityMutationBinding;
+import com.example.mybank.model.History;
+import com.example.mybank.model.Mutasi;
+import com.example.mybank.model.MutasiResponse;
+import com.example.mybank.viewmodels.NasabahViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -20,13 +31,18 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class MutationActivity extends AppCompatActivity {
-    private MaterialButton dateBtn;
-    private TextView dateTV;
+    private NasabahViewModel nbVM;
+    private ActivityMutationBinding binding;
+
+    private MutasiAdapter mutasiAdapter;
+    private ArrayList<Mutasi> mutasis = new ArrayList<>();
 
     long today;
     long monthBefore;
@@ -37,15 +53,18 @@ public class MutationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mutation);
-        findViewById();
+        binding = ActivityMutationBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        init();
         getClearedUTC();
         initSetting();
         onGroupClick();
     }
 
-    void findViewById() {
-        dateBtn = findViewById(R.id.setDateBtn);
-        dateTV = findViewById(R.id.dateTV);
+    void init() {
+        nbVM = ViewModelProviders.of(this).get(NasabahViewModel.class);
+        nbVM.init();
     }
 
     private static Calendar getClearedUTC() {
@@ -72,7 +91,7 @@ public class MutationActivity extends AppCompatActivity {
         builderRange.setCalendarConstraints(oneMonthBeforeTodayConstraints().build());
         MaterialDatePicker<Pair<Long, Long>> pickerRange = builderRange.build();
 
-        dateBtn.setOnClickListener(new View.OnClickListener() {
+        binding.setDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickerRange.show(getSupportFragmentManager(), pickerRange.toString());
@@ -84,9 +103,47 @@ public class MutationActivity extends AppCompatActivity {
                 SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String first = simpleFormat.format(selection.first);
                 String last = simpleFormat.format(selection.second);
-                dateTV.setText("Jangka waktu: " + first + " sampai " + last);
+                binding.dateTV.setText("Jangka waktu: " + first + " --> " + last);
+                getMutasi(first, last);
             }
         });
+    }
+
+    private void getMutasi(String first, String last) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            SharedPreferences sharedPreferences = getSharedPreferences("com.example.mybank.login", Context.MODE_PRIVATE);
+
+            String username = sharedPreferences.getString("com.example.mybank.login", "");
+            Date start = format.parse(first);
+            Date end = format.parse(last);
+
+            History hs = new History(username, first, last);
+            nbVM.getMutasi(hs).observe(this, mutasiResponse -> {
+                System.out.println("Mutation response: " + mutasiResponse.getMessage());
+                MutasiResponse response = mutasiResponse;
+                if (response.getResponse() == 200) {
+                    if (mutasiAdapter == null) {
+                        mutasiAdapter = new MutasiAdapter(MutationActivity.this, mutasis);
+                        binding.mutasiRV.setLayoutManager(new LinearLayoutManager(this));
+                        binding.mutasiRV.setAdapter(mutasiAdapter);
+                        binding.mutasiRV.setItemAnimator(new DefaultItemAnimator());
+                        binding.mutasiRV.setNestedScrollingEnabled(true);
+                    } else {
+                        mutasiAdapter.notifyDataSetChanged();
+                    }
+                    nbVM = ViewModelProviders.of(this).get(NasabahViewModel.class);
+                    nbVM.init();
+                    List<Mutasi> newMutasi = mutasiResponse.getData();
+                    mutasis.addAll(newMutasi);
+                    mutasiAdapter.notifyDataSetChanged();
+
+                }
+            });
+
+        } catch (Exception e) {
+            System.out.println("ERROR GET MUTASI: " + e);
+        }
     }
 
     private CalendarConstraints.Builder oneMonthBeforeTodayConstraints() {

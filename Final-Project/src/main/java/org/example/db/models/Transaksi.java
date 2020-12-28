@@ -27,9 +27,10 @@ public class Transaksi {
     @Column(name = "rekening_tujuan")
     private String rekening_tujuan;
 
-    @CreationTimestamp
+//    @CreationTimestamp
     @Column(name = "transaction_date", insertable = false, updatable = false, nullable = false)
-    private Date transaction_date;
+//    private Date transaction_date;
+    private String transaction_date;
 
     @Column(name = "tipe_transaksi")
     private String tipe_transaksi;
@@ -81,12 +82,20 @@ public class Transaksi {
     }
 
     // -------------------- SETTER & GETTER TRANSACTION DATE --------------------
-    public Date getTransaction_date() {
+//    public Date getTransaction_date() {
+//        return transaction_date;
+//    }
+//    @PrePersist
+//    public void setTransaction_date() {
+//        this.transaction_date = new Date();
+//    }
+
+
+    public String getTransaction_date() {
         return transaction_date;
     }
-    @PrePersist
-    public void setTransaction_date() {
-        this.transaction_date = new Date();
+    public void setTransaction_date(String transaction_date) {
+        this.transaction_date = transaction_date;
     }
 
     // -------------------- SETTER & GETTER TRANSACTION TYPE --------------------

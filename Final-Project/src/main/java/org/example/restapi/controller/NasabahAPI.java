@@ -38,7 +38,7 @@ public class NasabahAPI {
         }
     }
 
-    @PostMapping("/login")
+    @PutMapping("/login")
     public ResponseEntity<?> doLogin (@RequestBody Nasabah nb) {
         try {
             send.doLogin(new Gson().toJson(nb));
@@ -54,10 +54,10 @@ public class NasabahAPI {
         }
     }
 
-    @PutMapping("/logout")
-    public ResponseEntity<?> doLogout(@RequestBody Nasabah nb) {
+    @PutMapping("/logout/{username}")
+    public ResponseEntity<?> doLogout(@PathVariable("username") String nb) {
         try {
-            send.doLogout(new Gson().toJson(nb));
+            send.doLogout(nb);
             Thread.sleep(2300);
             return new ResponseEntity<>(recv.logoutAPI(), HttpStatus.OK);
         } catch (Exception e) {
@@ -109,15 +109,19 @@ public class NasabahAPI {
         }
     }
 
-//    @PostMapping("/mutasi")
-//    public ResponseEntity<?> getMutasi(@RequestBody Mutasi mt) {
-//        try {
-////            send.getMutasi(new Gson().toJson(mt));
-////            recv.getMutasi();
-//            return new ResponseEntity<>("Bisa", HttpStatus.OK);
-//        } catch (Exception e) {
-//            System.out.println("ERROR GET MUTASI: " + e);
-//            return new ResponseEntity<>("Data tidak ditemukan.", HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @PostMapping("/mutasi")
+    public ResponseEntity<?> getMutasi(@RequestBody Mutasi mt) {
+        try {
+            send.getMutasi(new Gson().toJson(mt));
+            String resp = recv.mutasiFromDB();
+            while (resp == null || resp.equals("")) {
+                Thread.sleep(500);
+            }
+            System.out.println("isi response: " + resp);
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("ERROR GET MUTASI: " + e);
+            return new ResponseEntity<>("Data tidak ditemukan.", HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -31,7 +31,7 @@
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/white"
                 android:layout_below="@id/saldoTV"
-                android:text="$15,990.00"
+                android:text="@string/initial_saldo"
                 android:textSize="35sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="70dp"/>
@@ -79,6 +79,18 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/exit"
+            android:paddingBottom="20dp"
+            android:clickable="true"
+            android:textSize="18sp"
+            android:textColor="@color/black_shadow"/>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

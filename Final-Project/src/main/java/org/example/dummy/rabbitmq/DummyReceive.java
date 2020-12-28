@@ -27,8 +27,10 @@ public class DummyReceive {
     protected String message = "";
     private String saldoResponse = "";
     private String loginResponse = "";
+    private String logoutResponse = "";
     private boolean success=false;
 
+    // --------------------------------- CONNECTION ---------------------------------
     public void conD() {
         this.entityManager = Persistence
                 .createEntityManagerFactory("user-unit")
@@ -54,8 +56,16 @@ public class DummyReceive {
         connection = factory.newConnection();
     }
 
+
+
+
+
+    // --------------------------------- GETTER SETTER ---------------------------------
     public void setSaldoDummy(String saldoDummy) {
         this.saldoDummy = saldoDummy;
+    }
+    public String getSaldoDummy() {
+        return this.saldoDummy;
     }
 
     public String getMessage() {
@@ -72,6 +82,11 @@ public class DummyReceive {
         this.saldoResponse = saldoResponse;
     }
 
+
+
+
+
+    // --------------------------------- BALIKAN SALDO ---------------------------------
     public String recvSaldoFromDB() throws IOException, TimeoutException {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -95,7 +110,6 @@ public class DummyReceive {
                 object.put("response", 200);
                 object.put("status", "Success");
                 object.put("message", this.message);
-//                object.put("Saldo", this.message);
                 saldoResponse = object.toJSONString();
                 success = false;
             } else {
@@ -114,6 +128,7 @@ public class DummyReceive {
 
     }
 
+    // --------------------------------- BALIKAN LOGIN ---------------------------------
     public String loginAPI() throws IOException, TimeoutException {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -142,7 +157,6 @@ public class DummyReceive {
         }
         return loginResponse;
     }
-
     public String response(String message) {
         String loginResponse = "";
         try {
@@ -165,10 +179,58 @@ public class DummyReceive {
         return loginResponse;
     }
 
-    public String getSaldoDummy() {
-        return this.saldoDummy;
+    // --------------------------------- BALIKAN LOGOUT ---------------------------------
+    public String logoutDummy() throws IOException, TimeoutException {
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+
+            channel.queueDeclare("logoutFromDBD", false, false, false, null);
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Data Received '" + message + "'");
+                logoutResponse = logoutRes(message);
+            };
+            channel.basicConsume("logoutFromDBD", true, deliverCallback, consumerTag -> { });
+
+        } catch (Exception e) {
+            System.out.println("ERROR DATA LOGOUT APIRecv: " + e);
+        }
+        while (logoutResponse.equals("")) {
+            try {
+                Thread.sleep(0);
+            } catch (Exception e) {
+                System.out.println("ERROR DATA Thread sleep: " + e);
+            }
+        }
+        return logoutResponse;
+    }
+    public String logoutRes(String message) {
+        String logoutResponse = "";
+        try {
+            if (!message.equals("0")) {
+                JSONObject object = new JSONObject();
+                object.put("response", 200);
+                object.put("status", "Success");
+                object.put("message", "Success Logout");
+                logoutResponse = object.toJSONString();
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("response", 400);
+                object.put("status", "Error");
+                object.put("message", "Gagal Logout:(");
+                logoutResponse = object.toJSONString();
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR DATA LOGIN APIRecv: " + e);
+        }
+        return logoutResponse;
     }
 
+    // --------------------------------- TERIMA UANG ---------------------------------
     public void transferedMoney() {
         try {
             connectRabbitMQ();
@@ -179,10 +241,7 @@ public class DummyReceive {
                 System.out.println(" [x] Received Transfer'" + nbString + "'");
                 Transaksi tr = new Gson().fromJson(nbString, Transaksi.class);
                 conD();
-//                int res = naDao.userCheckId(tr.getUsername());
-//                if (res != 0) {
-                    dummyDAO.transfered(nbString);
-//                }
+                dummyDAO.transfered(nbString);
                 com();
             };
             channel.basicConsume("transferDummy", true, deliverCallback, consumerTag -> { });

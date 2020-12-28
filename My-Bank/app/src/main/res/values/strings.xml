@@ -29,4 +29,6 @@
     <string name="set_date">Pilih tanggal</string>
     <string name="rp">Rp</string>
     <string name="gender">Gender</string>
+    <string name="exit">Keluar</string>
+    <string name="initial_saldo">Rp. -</string>
 </resources>
