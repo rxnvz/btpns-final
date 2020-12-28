@@ -86,16 +86,22 @@ public class DummyDAO {
 
         if (tr.getKode_transaksi().equals("014")) {
             DummyBank db = entityManager.find(DummyBank.class, tr.getRekening_tujuan());
-            db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
-            entityManager.merge(db);
-            System.out.println("Ini dalem bank BCA");
+            if (db != null) {
+                db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
+                entityManager.merge(db);
+                System.out.println("Ini dalem bank BCA");
+            }
+            System.out.println("Rekening tidak ditemukan");
         } else if (tr.getKode_transaksi().equals("008")) {
             DummyBank db = entityManager.find(DummyBank.class, tr.getRekening_tujuan());
-            db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
-            entityManager.merge(db);
-            System.out.println("Ini dalem bank Mandiri");
+            if (db != null) {
+                db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
+                entityManager.merge(db);
+                System.out.println("Ini dalem bank Mandiri");
+            }
+            System.out.println("Rekening tidak ditemukan");
         } else {
-            System.out.println("Ga ketemu plz");
+            System.out.println("Bank tidak ditemukan");
         }
 
     }

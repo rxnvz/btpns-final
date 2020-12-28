@@ -200,6 +200,10 @@ public class DBReceive {
         }
     }
 
+
+
+
+
     // ---------------------------- DB RECEIVE FOR DUMMYBANK CLASS ----------------------------
     public void newRekening() {
         try {
@@ -297,8 +301,11 @@ public class DBReceive {
         }
     }
 
-    // ---------------------------- DB RECEIVE FOR TRANSFER ----------------------------
 
+
+
+
+    // ---------------------------- DB RECEIVE FOR TRANSFER ----------------------------
     public void doTransfer() {
         try {
             connectRabbitMQ();
@@ -326,4 +333,6 @@ public class DBReceive {
             System.out.println("ERROR REGISTRASI NASABAH = " + e);
         }
     }
+
+//    public
 }

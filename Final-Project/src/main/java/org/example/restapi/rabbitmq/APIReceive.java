@@ -23,6 +23,7 @@ public class APIReceive {
     private String mutasiResponse = "";
     private boolean success=false;
 
+    // --------------------------------- GETTER SETTER ---------------------------------
     public String getMessage() {
         return message;
     }
@@ -44,6 +45,10 @@ public class APIReceive {
         this.mutasiResponse = mutasiResponse;
     }
 
+
+
+
+    // --------------------------------- BALIKAN MUTASI ---------------------------------
     public String mutasiFromDB() throws IOException, TimeoutException {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -85,6 +90,7 @@ public class APIReceive {
         return this.getMutasiResponse();
     }
 
+    // --------------------------------- BALIKAN GET SALDO ---------------------------------
     public String getSaldo() throws IOException, TimeoutException {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -126,6 +132,7 @@ public class APIReceive {
         return this.getSaldoResponse();
     }
 
+    // --------------------------------- BALIKAN LOGIN ---------------------------------
     public String loginAPI() throws IOException, TimeoutException {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -154,7 +161,29 @@ public class APIReceive {
         }
         return loginResponse;
     }
+    public String response(String message) {
+        String loginResponse = "";
+        try {
+            if (!message.equals("0")) {
+                JSONObject object = new JSONObject();
+                object.put("response", 200);
+                object.put("status", "Success");
+                object.put("message", "Success Login");
+                loginResponse = object.toJSONString();
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("response", 400);
+                object.put("status", "Error");
+                object.put("message", "Gagal Login. Mohon dicek kembali username dan password anda");
+                loginResponse = object.toJSONString();
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR DATA LOGIN APIRecv: " + e);
+        }
+        return loginResponse;
+    }
 
+    // --------------------------------- BALIKAN LOGOUT ---------------------------------
     public String logoutAPI() throws IOException, TimeoutException {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -183,28 +212,6 @@ public class APIReceive {
         }
         return logoutResponse;
     }
-
-    public String response(String message) {
-        String loginResponse = "";
-        try {
-            if (!message.equals("0")) {
-                JSONObject object = new JSONObject();
-                object.put("response", 200);
-                object.put("status", "Success");
-                object.put("message", "Success Login");
-                loginResponse = object.toJSONString();
-            } else {
-                JSONObject object = new JSONObject();
-                object.put("response", 400);
-                object.put("status", "Error");
-                object.put("message", "Gagal Login. Mohon dicek kembali username dan password anda");
-                loginResponse = object.toJSONString();
-            }
-        } catch (Exception e) {
-            System.out.println("ERROR DATA LOGIN APIRecv: " + e);
-        }
-        return loginResponse;
-    }
     public String responseLogout(String message) {
         String logoutResponse = "";
         try {
@@ -218,7 +225,7 @@ public class APIReceive {
                 JSONObject object = new JSONObject();
                 object.put("response", 400);
                 object.put("status", "Error");
-                object.put("message", "Error Logout:(");
+                object.put("message", "Kamu sudah keluar dari aplikasi");
                 logoutResponse = object.toJSONString();
             }
         } catch (Exception e) {
