@@ -43,7 +43,7 @@ public class DummyRepository {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username",login.getUsername());
             jsonObject.put("password",login.getPassword());
-            AndroidNetworking.put("http://10.0.2.2:8990/dum/login")
+            AndroidNetworking.put("http://10.0.2.2:8990/transfer/login")
                     .addJSONObjectBody(jsonObject)
                     .setTag("login")
                     .build()
@@ -78,7 +78,7 @@ public class DummyRepository {
     public MutableLiveData<APIResponse> logout(String s) {
         MutableLiveData<APIResponse> result = new MutableLiveData<>();
         APIResponse res = new APIResponse();
-        AndroidNetworking.put("http://10.0.2.2:8990/dum/logout/{username}")
+        AndroidNetworking.put("http://10.0.2.2:8990/transfer/logout/{username}")
                 .addPathParameter("username", s)
                 .setTag("logout")
                 .setPriority(Priority.HIGH)
@@ -128,7 +128,7 @@ public class DummyRepository {
     public MutableLiveData<APIResponse> getSaldo(String s) {
         MutableLiveData<APIResponse> checkSaldo = new MutableLiveData<>();
         APIResponse res = new APIResponse();
-        AndroidNetworking.get("http://10.0.2.2:8990/dum/saldo/{rekening}")
+        AndroidNetworking.get("http://10.0.2.2:8990/transfer/saldo/{rekening}")
                 .addPathParameter("rekening", s)
                 .setTag("getSaldo")
                 .setPriority(Priority.HIGH)

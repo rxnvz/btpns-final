@@ -2,6 +2,7 @@ package org.example.db.service;
 
 import com.google.gson.Gson;
 import org.example.db.models.DummyBank;
+import org.example.db.models.Nasabah;
 import org.example.db.models.Transaksi;
 
 import javax.persistence.EntityManager;
@@ -87,19 +88,28 @@ public class DummyDAO {
         if (tr.getKode_transaksi().equals("014")) {
             DummyBank db = entityManager.find(DummyBank.class, tr.getRekening_tujuan());
             if (db != null) {
-                db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
-                entityManager.merge(db);
-                System.out.println("Ini dalem bank BCA");
+                Nasabah nb = entityManager.find(Nasabah.class, tr.getId_nasabah());
+                if (nb.getSaldo() >= (tr.getTrans_money()+6500)){
+                    db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
+                    entityManager.merge(db);
+                    System.out.println("Ini dalem bank BCA");
+                }
+            } else {
+                System.out.println("Rekening BCA tidak ditemukan");
             }
-            System.out.println("Rekening tidak ditemukan");
+
         } else if (tr.getKode_transaksi().equals("008")) {
             DummyBank db = entityManager.find(DummyBank.class, tr.getRekening_tujuan());
             if (db != null) {
-                db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
-                entityManager.merge(db);
-                System.out.println("Ini dalem bank Mandiri");
+                Nasabah nb = entityManager.find(Nasabah.class, tr.getId_nasabah());
+                if (nb.getSaldo() >= (tr.getTrans_money()+6500)){
+                    db.setSaldo_dummy(db.getSaldo_dummy() + tr.getTrans_money());
+                    entityManager.merge(db);
+                    System.out.println("Ini dalem bank Mandiri");
+                }
+            } else {
+                System.out.println("Rekening Mandiri tidak ditemukan");
             }
-            System.out.println("Rekening tidak ditemukan");
         } else {
             System.out.println("Bank tidak ditemukan");
         }

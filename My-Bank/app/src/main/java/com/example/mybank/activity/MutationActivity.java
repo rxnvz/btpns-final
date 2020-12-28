@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class MutationActivity extends AppCompatActivity {
@@ -100,7 +101,8 @@ public class MutationActivity extends AppCompatActivity {
         pickerRange.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @Override
             public void onPositiveButtonClick(Pair<Long,Long> selection) {
-                SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                simpleFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                 String first = simpleFormat.format(selection.first);
                 String last = simpleFormat.format(selection.second);
                 binding.dateTV.setText("Jangka waktu: " + first + " --> " + last);

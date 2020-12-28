@@ -153,9 +153,10 @@ public class DBReceive {
                 System.out.println(" [x] Received '" + mutasi + "'");
                 con();
                 int res = naDao.userCheckIdMutasi(mutasi);
-                Mutasi mt = new Gson().fromJson(mutasi, Mutasi.class);
+
                 try {
                     if (res != 0){
+                        Mutasi mt = new Gson().fromJson(mutasi, Mutasi.class);
                         mt.setId_nasabah(res);
                         List<History> nbMutasi = naDao.getMutasi(new Gson().toJson(mt));
                         String isian = new Gson().toJson(nbMutasi);
@@ -333,6 +334,4 @@ public class DBReceive {
             System.out.println("ERROR REGISTRASI NASABAH = " + e);
         }
     }
-
-//    public
 }
