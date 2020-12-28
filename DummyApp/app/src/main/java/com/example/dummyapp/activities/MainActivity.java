@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -60,11 +61,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void onClickGroup() {
-//        binding.exit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        binding.exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doLogout();
+            }
+        });
+    }
+
+    void doLogout() {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.dummyapp.login", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("com.example.dummyapp.login", "");
+
+        dmVM.keluar(username).observe(this, logoutResponse -> {
+            APIResponse response = logoutResponse;
+            if (response.getResponse() == 200) {
+                SharedPreferences sharedPref = getSharedPreferences("com.example.dummyapp.login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.clear();
+                editor.apply();
+
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

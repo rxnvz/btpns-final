@@ -33,4 +33,12 @@ public class DummyViewModel extends ViewModel {
         liveData = dmRepo.getSaldo(s);
         return liveData;
     }
+
+    public LiveData<APIResponse> keluar(String s) {
+        if (liveData == null) {
+            dmRepo.getInstance();
+        }
+        liveData = dmRepo.logout(s);
+        return liveData;
+    }
 }
