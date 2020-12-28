@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 
 public class DBSend {
+    // ----------------------------- BUAT MAIN BANK -----------------------------
     public void sendSaldoToAPI (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -73,6 +74,7 @@ public class DBSend {
 
 
 
+    // ----------------------------- BUAT DUMMY APP -----------------------------
     public void sendToDummy (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -109,10 +111,6 @@ public class DBSend {
             System.out.println("Gagal mengirim Data Logout ke RestApi.." + e);
         }
     }
-
-
-
-
     public void sendTransfer (String message) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
