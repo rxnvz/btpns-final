@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -64,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 Nasabah nb = new Nasabah(nama, email, username, password, gender, nik, lahir, telp, alamat);
                 nbVM.registrasi(nb).observe(this, nbResponse ->{
-                    System.out.println("Registrasi response: " + nbResponse.getMessage());
+                    Log.v("Registrasi response: ", nbResponse.getMessage());
                     APIResponse response = nbResponse;
                     if (response.getResponse() == 200) {
                         moveToLogin("Sukses", "Pendaftaran berhasil!", 200);
@@ -72,7 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         } catch (Exception e) {
-            System.out.println("ERROR DATE: " + e);;
+            Log.v("error", "Error Regis");
+            e.printStackTrace();
         }
 
     }

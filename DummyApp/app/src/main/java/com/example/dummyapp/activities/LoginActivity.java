@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                 builder.setCancelable(false);
-                builder.setMessage("Untuk lupa password, segera hubungi call center BTPN di 1500300");
+                builder.setMessage("Untuk lupa password, segera hubungi call center Bank Anda");
                 builder.setPositiveButton("Oke", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

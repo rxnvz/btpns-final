@@ -1,5 +1,6 @@
 package com.example.mybank.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -9,17 +10,40 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.mybank.R;
 import com.example.mybank.databinding.ActivityLoginBinding;
 import com.example.mybank.model.APIResponse;
 import com.example.mybank.model.Login;
 import com.example.mybank.viewmodels.NasabahViewModel;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
+    String TAG = LoginActivity.class.getSimpleName();
+    String SITE_KEY = "6LfclRgaAAAAAHZ2jJLXMQsVhhDyJoGYnzr5hwoD";
+    String SECRET_KEY = "6LfclRgaAAAAAFLpCPrRFXPD_ku5rNUddJ97e7jF";
+    RequestQueue queue;
 
     private ActivityLoginBinding binding;
     private NasabahViewModel nbVM;
@@ -33,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        queue = Volley.newRequestQueue(getApplicationContext());
         init();
         findViewById();
         onClickGroup();
@@ -51,7 +76,27 @@ public class LoginActivity extends AppCompatActivity {
         binding.masukBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doLogin();
+//                doLogin();
+                SafetyNet.getClient(LoginActivity.this).verifyWithRecaptcha(SITE_KEY)
+                        .addOnSuccessListener(LoginActivity.this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                            @Override
+                            public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                                if (!response.getTokenResult().isEmpty()) {
+                                    handleSiteVerify(response.getTokenResult());
+                                }
+                            }
+                        })
+                        .addOnFailureListener(LoginActivity.this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                if (e instanceof ApiException) {
+                                    ApiException apiException = (ApiException) e;
+                                    Log.v(TAG, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+                                } else {
+                                    Log.v(TAG, "Unknown type of error: " + e.getMessage());
+                                }
+                            }
+                        });
             }
         });
         forgot.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +115,52 @@ public class LoginActivity extends AppCompatActivity {
                 alert.show();
             }
         });
+    }
+
+    protected  void handleSiteVerify(final String responseToken){
+        //it is google recaptcha siteverify server
+        //you can place your server url
+        String url = "https://www.google.com/recaptcha/api/siteverify";
+        StringRequest request = new StringRequest(com.android.volley.Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if(jsonObject.getBoolean("success")){
+                                if(binding.usernameLoginET.getText().toString().equals("") || binding.passwordLoginET.getText().toString().equals("")){
+                                    Toast.makeText(getApplicationContext(),"Masukkan username dan password!",Toast.LENGTH_LONG).show();
+                                }else {
+                                    doLogin();
+                                }
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(),String.valueOf(jsonObject.getString("error-codes")),Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception ex) {
+                            Log.v(TAG, "JSON exception: " + ex.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.v(TAG, "Error message: " + error.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("secret", SECRET_KEY);
+                params.put("response", responseToken);
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
     }
 
     void doLogin() {

@@ -1,6 +1,7 @@
 package com.example.mybank.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class MutasiAdapter extends RecyclerView.Adapter<MutasiAdapter.MutasiView
     @Override
     public void onBindViewHolder(@NonNull MutasiAdapter.MutasiViewHolder holder, int position) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println("Isi username di onBindViewHolder: " + mutasis.get(position).getUsername());
+        Log.v("onBindViewHolder: ", mutasis.get(position).getUsername());
         holder.penerimaTV.setText(mutasis.get(position).getRekening_tujuan());
         holder.tanggalTV.setText(dateFormat.format(mutasis.get(position).getTransaction_date()));
         holder.uangTV.setText(String.valueOf(mutasis.get(position).getTrans_money()));

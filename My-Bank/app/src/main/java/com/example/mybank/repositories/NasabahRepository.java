@@ -50,8 +50,7 @@ public class NasabahRepository {
 
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
-                System.out.println("Error register");
-                System.out.println("Isian error regis: " + t.getMessage());
+                Log.v("Error regis: ", t.getMessage());
             }
         });
         return result;
@@ -69,7 +68,7 @@ public class NasabahRepository {
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
                 result.setValue(null);
-                System.out.println("Isian error Login: " + t.getMessage());
+                Log.v("Error Login: ", t.getMessage());
             }
         });
         return result;
@@ -87,7 +86,7 @@ public class NasabahRepository {
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
                 result.setValue(null);
-                System.out.println("Isian error Login: " + t.getMessage());
+                Log.v("Error Logout: ", t.getMessage());
             }
         });
         return result;
@@ -105,7 +104,7 @@ public class NasabahRepository {
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
                 checkSaldo.setValue(null);
-                System.out.println("Isian error cek saldo: " + t.getMessage());
+                Log.v("Error Saldo", t.getMessage());
             }
         });
         return checkSaldo;
@@ -127,7 +126,7 @@ public class NasabahRepository {
 
             @Override
             public void onFailure(Call<APIResponse> call, Throwable t) {
-                System.out.println("Error transfer -- " + t.getMessage());
+                Log.v("Error transfer -- ", t.getMessage());
             }
         });
         return result;
@@ -146,7 +145,7 @@ public class NasabahRepository {
 
             @Override
             public void onFailure(Call<MutasiResponse> call, Throwable t) {
-                System.out.println("Error get Mutasi! -- " + t.getMessage());
+                Log.v("Error Mutasi!: ", t.getMessage());
             }
         });
         return result;

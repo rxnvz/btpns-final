@@ -122,7 +122,7 @@ public class MutationActivity extends AppCompatActivity {
 
             History hs = new History(username, first, last);
             nbVM.getMutasi(hs).observe(this, mutasiResponse -> {
-                System.out.println("Mutation response: " + mutasiResponse.getMessage());
+                Log.v("Mutation response: ", mutasiResponse.getMessage());
                 MutasiResponse response = mutasiResponse;
                 if (response.getResponse() == 200) {
                     if (mutasiAdapter == null) {
@@ -139,7 +139,6 @@ public class MutationActivity extends AppCompatActivity {
                     List<Mutasi> newMutasi = mutasiResponse.getData();
                     mutasis.addAll(newMutasi);
                     mutasiAdapter.notifyDataSetChanged();
-
                 }
             });
 

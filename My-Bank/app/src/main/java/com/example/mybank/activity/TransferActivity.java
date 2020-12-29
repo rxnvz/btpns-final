@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,8 +37,6 @@ public class TransferActivity extends AppCompatActivity {
         binding = ActivityTransferBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-//        findViewById();
-//        onClickGroup();
         init();
         onClickGroup();
     }
@@ -71,7 +70,7 @@ public class TransferActivity extends AppCompatActivity {
         } else {
             Transfer tf = new Transfer(username, kode_transaksi, rekening_tujuan, duit);
             nbVM.transferUang(tf).observe(this, tfResponse -> {
-                System.out.println("Transfer Response: " + tfResponse.getMessage());
+                Log.v("Transfer Response: ", tfResponse.getMessage());
                 APIResponse response = tfResponse;
                 if (response.getResponse() == 200) {
                     moveToHome("Sukses", "Transfer uang berhasil!", 200);
@@ -89,55 +88,4 @@ public class TransferActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
-//    void findViewById() {
-//        tfBtn = findViewById(R.id.transferBtn);
-//    }
-//
-//    void onClickGroup() {
-//        tfBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(TransferActivity.this);
-//                builder.setTitle("PIN");
-//                builder.setMessage("Masukkan Pin anda:");
-//
-//                final EditText inputPin = new EditText(TransferActivity.this);
-//                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-//                        LinearLayout.LayoutParams.MATCH_PARENT,
-//                        LinearLayout.LayoutParams.MATCH_PARENT);
-//                inputPin.setLayoutParams(lp);
-//                inputPin.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//                builder.setView(inputPin);
-//
-//                builder.setPositiveButton("Kirim", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        AlertDialog.Builder sendTf = new AlertDialog.Builder(TransferActivity.this);
-//                        sendTf.setTitle("Transfer berhasil!");
-//                        sendTf.setMessage("Transfer berhasil. Silahkan kembali ke menu utama");
-//                        sendTf.setPositiveButton("Oke", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                //This should've back to main menu
-//                                finish();
-//                            }
-//                        });
-//                        AlertDialog alertTf = sendTf.create();
-//                        alertTf.show();
-//                    }
-//                });
-//
-//                builder.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                AlertDialog alert = builder.create();
-//                alert.show();
-//            }
-//        });
-//    }
 }

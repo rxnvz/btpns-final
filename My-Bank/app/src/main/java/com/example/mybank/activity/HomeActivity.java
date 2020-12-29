@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.mybank.R;
@@ -39,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.mybank.login", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("com.example.mybank.login", "");
-        System.out.println("Username: " + username);
+        Log.v("username:", username);
 
         nbVM.lihatSaldo(username).observe(this, new Observer<APIResponse>() {
             @Override
