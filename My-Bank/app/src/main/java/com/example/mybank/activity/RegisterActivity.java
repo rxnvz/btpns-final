@@ -49,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void doRegister() {
+        Date date = null;
         try {
             String nama = binding.namaRegisET.getText().toString();
             String nik = binding.nikRegisET.getText().toString();
@@ -61,7 +62,9 @@ public class RegisterActivity extends AppCompatActivity {
             String password = binding.passwordRegisET.getText().toString();
 
             if (nama.equals("") || nik.equals("") || lahir.equals("") || gender.equals("") || telp.equals("") || alamat.equals("") || email.equals("") || username.equals("") || password.equals("")) {
-                Toast.makeText(getApplicationContext(), "Lengkapi data anda!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Lengkapi data anda!", Toast.LENGTH_SHORT).show();
+            } else if (!lahir.matches("((18|19|20)[0-9]{2}[\\-.](0[13578]|1[02])[\\-.](0[1-9]|[12][0-9]|3[01]))|(18|19|20)[0-9]{2}[\\-.](0[469]|11)[\\-.](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[\\-.](02)[\\-.](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[\\-.](02)[\\-.]29") ){
+                Toast.makeText(getApplicationContext(), "Format tanggal lahir yang dimasukkan salah!", Toast.LENGTH_SHORT).show();
             } else {
                 Nasabah nb = new Nasabah(nama, email, username, password, gender, nik, lahir, telp, alamat);
                 nbVM.registrasi(nb).observe(this, nbResponse ->{
